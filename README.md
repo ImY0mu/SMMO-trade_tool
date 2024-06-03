@@ -40,7 +40,7 @@ How to get items traded sent to SMMOStaff:
 
 How to compare the items and see what is still left or if there were more items sent to SMMOStaff:
 - Open Console (CTRL+SHIFT+J/I)
-- Enter `compareStoredItems(getStoredItems(20000), getStoredItems(10000));` into the console (20000 - because the first items are stored from the trades of alt account B, 993614 - because the second items are stored from the trades of main account A)
+- Enter `compareStoredItems(getStoredItems(20000), getStoredItems(10000));` into the console (20000 - because the first items are stored from the trades of alt account B, 10000 - because the second items are stored from the trades of main account A)
 - See and review the printed results to determine whether it is enough or no.
 
 ### Functions:
