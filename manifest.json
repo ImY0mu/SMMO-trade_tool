@@ -1,0 +1,47 @@
+{
+  "name": "SimpleMMO - Trade tool",
+  "author": "Y0mu",
+  "description": "SMMO browser extension developed by Y0mu. It is a chrome extension that improves way to handle alt trades at SMMO web app.",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "icons": {
+    "128": "img/icon.png",
+    "48": "img/icon_48x48.png",
+    "32": "img/icon_32x32.png",
+    "16": "img/icon_16x16.png"
+  },
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "action": {
+    "default_icon": {
+      "128": "img/icon.png",
+      "48": "img/icon_48x48.png",
+      "32": "img/icon_32x32.png",
+      "16": "img/icon_16x16.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "world": "MAIN",
+      "js": [
+        "js/main.js"
+      ],
+      "matches": [
+        "https://web.simple-mmo.com/*"
+      ],
+      "exclude_matches": [
+        "https://web.simple-mmo.com/login",
+        "https://web.simple-mmo.com/register"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "webRequest",
+    "declarativeNetRequest"
+  ]
+}
