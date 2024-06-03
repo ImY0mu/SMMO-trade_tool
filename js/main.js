@@ -186,7 +186,13 @@ function getStoredItems(sender){
      */
     let sender_index = stored_trade_items.findIndex((x) => x.sender === sender);
 
-    return stored_trade_items[sender_index].items;
+    /**
+     * Return if exists.
+     */
+    if(sender_index !== -1)
+        return stored_trade_items[sender_index].items;
+
+    return console.log("%c📙 There are no items from this sender in storage.", 'background: #676900; color: #fff786');
 }
 
 /**
