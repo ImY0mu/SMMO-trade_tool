@@ -239,26 +239,26 @@ function compareStoredItems(required_items, returned_items) {
     /**
      * Print items that were not sent in full quantity.
      */
-    console.log("Not enough:");
+    console.warn("Player has returned, but not the exact quantity:");
     not_enough_items.forEach((missing_item) => {
-        console.log(missing_item.id, missing_item.name, missing_item.quantity);
+        console.log(missing_item.quantity + "x " + missing_item.name + " [id: " + missing_item.id + "]" );
     });
 
 
     /**
      * Print missing items.
      */
-    console.log("Missing items:");
+    console.warn("Player has not returned:");
     missing_items.forEach((missing_item) => {
-        console.log(missing_item.id, missing_item.name, missing_item.quantity);
+        console.log(missing_item.quantity + "x " + missing_item.name + " [id: " + missing_item.id + "]" );
     });
 
     /**
      * Print additional items.
      */
-    console.log("Additional items:");
+    console.warn("Player has added to the returned list:");
     additional_items.forEach((missing_item) => {
-        console.log(missing_item.id, missing_item.name, missing_item.quantity);
+        console.log(missing_item.quantity + "x " + missing_item.name + " [id: " + missing_item.id + "]" );
     });
 }
 
