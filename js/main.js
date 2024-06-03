@@ -269,6 +269,7 @@ function compareStoredItems(required_items, returned_items) {
  * @param {int|string} sender 
  */
 function printItems(sender) {
+    let text = "";
     let stored_items = getStoredItems(sender);
 
     if(stored_items == null || stored_items == undefined)
