@@ -3,6 +3,7 @@
  * @returns void
  */
 function resetItems() {
+    console.log("Stored items have been cleared. Now you can start tracking next alt trading case.")
     localStorage.removeItem("stored_trade_items");
 }
 
@@ -63,7 +64,8 @@ function getItems(sender, receiver = null) {
         });
     }
 
-    if (!items.length) return console.warn("No items");
+    if (!items.length) 
+        return console.log("%c📙 This page has no traded between the sender and receiver", 'background: #676900; color: #fff786');
 
     storeItems(sender, items);
 }
@@ -247,7 +249,7 @@ function compareStoredItems(required_items, returned_items) {
     /**
      * Print items that were not sent in full quantity.
      */
-    console.log("%c📙 Player has returned, but not the exact quantity:", 'background: #676900; color: #fff786');
+    console.log("%c📙 Player has returned, but the quantity below is still missing:", 'background: #676900; color: #fff786');
     not_enough_items.forEach((missing_item) => {
         console.log(missing_item.quantity + "x " + missing_item.name + " [id: " + missing_item.id + "]" );
     });
