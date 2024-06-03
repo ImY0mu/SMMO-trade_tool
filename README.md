@@ -29,7 +29,7 @@ How to get alt traded items:
 - Step 1: Open trade page of account A
 - Step 2: Find the first trade between the main (account A) and alt (account B)
 - Step 3: Open Console (CTRL+SHIFT+J/I)
-- Step 4: Enter `getItems("account A", "accountB");` into the console (first is account that received the items, second is account that sent the items)
+- Step 4: Enter `getItems("account A", "account B");` into the console (first is account that received the items, second is account that sent the items)
 - Step 5: Go to the next trade page
 - Step 6: Repeat from step 4 until you go through all trade pages
 
