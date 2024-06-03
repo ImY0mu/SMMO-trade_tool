@@ -1,7 +1,7 @@
 # SMMO web app alt trade tool extension
 Tool to compare alt traded and returned items to make live of moderators easier.
 
-Version: 0.1.2
+Version: 0.1.3
 
 Developed by Y0mu#0703
 
