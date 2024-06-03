@@ -29,9 +29,18 @@ function isReceiverInTrade(receiver, receiver_text) {
  * @returns boolean
  */
 function areSendersInTrade(senders, sender_text) {
+    if(senders == null)
+        return true;
+
+    if(!senders.length)
+        return true;
+
+
     if (Array.isArray(senders)) {
+
         for (const sender of senders) {
-            if (sender_text.includes(sender)) return true;
+            if (sender_text.includes(sender)) 
+                return true;
         }
 
         return false;
@@ -130,13 +139,13 @@ function getItems(receiver = null, senders = null, failed_check_only = true) {
     let items = [];
 
     for (let i = 1; i < rows.length; i++) {
-        if (
-            !isReceiverInTrade(receiver, rows[i].children[1].innerHTML) &&
-            !areSendersInTrade(senders, rows[i].children[2].innerHTML)
-        )
+        if (!isReceiverInTrade(receiver, rows[i].children[1].innerText))
             continue;
 
-        if (!hasFailedCheck(rows[i].children[5].innerHTML) && failed_check_only)
+        if (isReceiverInTrade(receiver, rows[i].children[1].innerText) && !areSendersInTrade(senders, rows[i].children[0].innerText))
+            continue;
+
+        if (!hasFailedCheck(rows[i].children[5].innerText) && failed_check_only)
             continue;
 
         items.push(getItemFromRow(rows[i]));
@@ -245,6 +254,8 @@ function getStoredItems(receiver, manually_called = true) {
  */
 function compareStoredItems(required_items, returned_items) {
     let missing_items = [];
+
+    console.log(required_items, returned_items);
 
     returned_items.forEach((returned_item) => {
         let index = required_items.findIndex((x) => x.id === returned_item.id);
