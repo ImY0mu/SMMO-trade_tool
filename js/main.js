@@ -236,27 +236,26 @@ function compareStoredItems(required_items, returned_items) {
         return required_item.quantity > 0;
     });
 
-    /**
-     * Print items that were not sent in full quantity.
+     /**
+     * Print missing items.
      */
-    console.warn("Player has returned, but not the exact quantity:");
-    not_enough_items.forEach((missing_item) => {
+    console.log("%c📕 Player has not returned:", 'background: #690007; color: #ff8686');
+    missing_items.forEach((missing_item) => {
         console.log(missing_item.quantity + "x " + missing_item.name + " [id: " + missing_item.id + "]" );
     });
 
-
     /**
-     * Print missing items.
+     * Print items that were not sent in full quantity.
      */
-    console.warn("Player has not returned:");
-    missing_items.forEach((missing_item) => {
+    console.log("%c📙 Player has returned, but not the exact quantity:", 'background: #676900; color: #fff786');
+    not_enough_items.forEach((missing_item) => {
         console.log(missing_item.quantity + "x " + missing_item.name + " [id: " + missing_item.id + "]" );
     });
 
     /**
      * Print additional items.
      */
-    console.warn("Player has added to the returned list:");
+    console.log("%c📗 Player has added to the returned list:", 'background: #276900; color: #a2ff86');
     additional_items.forEach((missing_item) => {
         console.log(missing_item.quantity + "x " + missing_item.name + " [id: " + missing_item.id + "]" );
     });
