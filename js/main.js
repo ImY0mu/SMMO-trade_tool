@@ -65,7 +65,7 @@ function getItems(sender, receiver = null) {
     }
 
     if (!items.length) 
-        return console.log("%c📙 This page has no traded between the sender and receiver.", 'background: #676900; color: #fff786');
+        return console.log("%c📙 This page has no trades between the sender and receiver.", 'background: #676900; color: #fff786');
 
     console.log("%c📗 All trades (" + items.length + ") from this page has been stored.", 'background: #276900; color: #a2ff86');
     storeItems(sender, items);
