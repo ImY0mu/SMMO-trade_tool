@@ -23,7 +23,7 @@ Developed by Y0mu#0703
 ### Usage:
 If player with account A (user_id 10000) sent items from alt account B (user_id 20000), then we would work like this:
 
-**Before every alt trade, enter `resetItems();` into the console!**
+**Before new alt trading case, enter `resetItems();` once into the console!**
 
 How to get alt traded items:
 - Open trade page of account A
