@@ -100,3 +100,17 @@ compareStoredItems(getStoredItems(receiver_a), getStoredItems(receiver_b));
  */
 printItems(receiver);
 ```
+
+### Additional examples
+
+```js
+/**
+ * Situation when multiple accounts are returning to Staff account.
+ * 
+ * @param receiver
+ * @param senders
+ * @param failed_check_only - We have to disable this (set to false), 
+ * because trades to Staff account are not market as suspicious.
+ */
+getItems("SMMOStaff", ["Account 1", "Account 2"], false);
+```
