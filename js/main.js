@@ -174,7 +174,7 @@ function getStoredItems(sender){
     let stored_trade_items = localStorage.getItem("stored_trade_items");
 
     if (stored_trade_items === null || stored_trade_items === undefined)
-            return console.warn("No stored items from the sender");
+            return console.log("%c📙 There are no items from this sender in storage.", 'background: #676900; color: #fff786');
     
     /**
      * Parse the string of stored_trade_items.
