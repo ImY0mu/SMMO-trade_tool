@@ -87,3 +87,11 @@ compareStoredItems(required_items, returned_items);
  */
 compareStoredItems(getStoredItems(sender_a), getStoredItems(sender_b));
 ```
+
+```js
+/**
+ * Print text of items of the sender.
+ * @param {int|string} sender 
+ */
+printItems(sender);
+```
