@@ -36,7 +36,7 @@ How to get alt traded items:
 How to get items traded sent to SMMOStaff:
 - Step 1: Find the first trade between the main (account A) and SMMOStaff (account C)
 - Step 2: Open Console (CTRL+SHIFT+J/I)
-- Step 3: Enter `getItems("account C", "account A");` into the console (first is account that received the items, second is account that sent the items)
+- Step 3: Enter `getItems("account C", "account A", false);` into the console (first is account that received the items, second is account that sent the items, false because there is no "suspicious trade")
 - Step 5: Go to the next trade page
 - Step 6: Repeat from step 4 until you go through all trade pages
 
