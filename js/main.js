@@ -1,20 +1,124 @@
 /**
  * Reset the stored items.
+ *
  * @returns void
  */
 function resetItems() {
-    console.log("%c📗 Stored items have been cleared. Now you can start tracking next alt trading case.", 'background: #276900; color: #a2ff86');
+    logSuccess(
+        "Stored items have been cleared. Now you can start tracking next alt trading case."
+    );
     localStorage.removeItem("stored_trade_items");
+}
+
+/**
+ * Check whether the receiver is in the trade row.
+ *
+ * @param {string|int} receiver
+ * @param {string} receiver_text
+ * @returns boolean
+ */
+function isReceiverInTrade(receiver, receiver_text) {
+    return receiver_text.includes(receiver);
+}
+
+/**
+ * Check whether the senders are in the trade row.
+ *
+ * @param {array|string|int} senders
+ * @param {string} sender_text
+ * @returns boolean
+ */
+function areSendersInTrade(senders, sender_text) {
+    if (Array.isArray(senders)) {
+        for (const sender of senders) {
+            if (sender_text.includes(sender)) return true;
+        }
+
+        return false;
+    }
+
+    return sender_text.includes(senders);
+}
+
+/**
+ * Check whether the trade failed the suspicious check.
+ *
+ * @param {string} check_text
+ * @returns boolen
+ */
+function hasFailedCheck(check_text) {
+    return check_text.includes("View problem");
+}
+
+/**
+ * Get the item object from the row.
+ *
+ * @param {string} row
+ * @returns object
+ */
+function getItemFromRow(row) {
+    let id = parseInt(
+        row.children[2].innerHTML.split("retrieveItem(")[1].split(",")[0]
+    );
+
+    let name = row.children[2].innerText;
+
+    let quantity = parseInt(row.children[3].innerText);
+
+    return {
+        id: id,
+        name: name,
+        quantity: quantity,
+    };
+}
+
+/**
+ * Log warn message.
+ *
+ * @param {string} message
+ * @returns void
+ */
+function logWarn(message) {
+    console.log(`%c📙 ${message}`, "background: #676900; color: #fff786");
+}
+
+/**
+ * Log success message.
+ *
+ * @param {string} message
+ * @returns void
+ */
+function logSuccess(message) {
+    console.log(`%c📙 ${message}`, "background: #276900; color: #a2ff86");
+}
+
+/**
+ * Log error message.
+ *
+ * @param {string} message
+ * @returns void
+ */
+function logError(message) {
+    console.log(`%c📙 ${message}`, "background: #690007; color: #ff8686");
+}
+
+/**
+ * Log item message.
+ * @param {object} item
+ */
+function logItem(item) {
+    console.log(item.quantity + "x " + item.name + " [id: " + item.id + "]");
 }
 
 /**
  * Get items from the current trade page.
  *
- * @param {string|int} sender user_id or name of the sender
- * @param {string|int|null} receiver user_id or name of the receiver
+ * @param {string|int} receiver user_id or name of the receiver.
+ * @param {string|int|null|array} senders sender or list of senders (name, id).
+ * @param {bool} failed_check_only whether we should count only trades that are suspicious.
  * @returns void
  */
-function getItems(sender, receiver = null) {
+function getItems(receiver = null, senders = null, failed_check_only = true) {
     /**
      * Get the rows of the trade table.
      */
@@ -26,128 +130,68 @@ function getItems(sender, receiver = null) {
     let items = [];
 
     for (let i = 1; i < rows.length; i++) {
-        /**
-         * Skip if sender is not in the row's sender column.
-         */
-        if (!rows[i].children[0].innerHTML.includes(sender)) continue;
-
-        /**
-         * Skip if receiver is null or is not in the row's receiver column.
-         */
-        if (receiver !== null && !rows[i].children[1].innerHTML.includes(receiver))
+        if (
+            !isReceiverInTrade(receiver, rows[i].children[1].innerHTML) &&
+            areSendersInTrade(senders, rows[i].children[2].innerHTML)
+        )
             continue;
 
-        /**
-         * Get the id of the item.
-         */
-        let id = parseInt(
-            rows[i].children[2].innerHTML.split("retrieveItem(")[1].split(",")[0]
-        );
+        if (!hasFailedCheck(rows[i].children[5].innerHTML) && failed_check_only)
+            continue;
 
-        /**
-         * Get the name of the item.
-         */
-        let name = rows[i].children[2].innerText;
-
-        /**
-         * Get the quantity of the itme.
-         */
-        let quantity = parseInt(rows[i].children[3].innerText);
-
-        /**
-         * Add the item to the array.
-         */
-        items.push({
-            id: id,
-            name: name,
-            quantity: quantity,
-        });
+        items.push(getItemFromRow(rows[i]));
     }
 
-    if (!items.length) 
-        return console.log("%c📙 This page has no trades between the sender and receiver.", 'background: #676900; color: #fff786');
+    if (!items.length)
+        return logWarn("This page has no trades between the sender and receiver.");
 
-    console.log("%c📗 All trades (" + items.length + ") from this page have been stored.", 'background: #276900; color: #a2ff86');
-    storeItems(sender, items);
+    logSuccess(
+        "All trades (" + items.length + ") from this page have been stored."
+    );
+
+    storeItems(receiver, items);
 }
 
 /**
  * Store the items from the trade page.
  *
- * @param {string|int} sender user_id or name of the sender
- * @param {array} items items the sender sent
+ * @param {string|int} receiver user_id or name of the player who received the items.
+ * @param {array} items items that were sent to re
  */
-function storeItems(sender, items) {
-    /**
-     * Get the stored items.
-     */
+function storeItems(receiver, items) {
     let stored_trade_items = localStorage.getItem("stored_trade_items");
 
-    /**
-     * If empty then make it into an array.
-     */
     stored_trade_items =
         stored_trade_items !== null && stored_trade_items !== undefined
             ? JSON.parse(stored_trade_items)
             : [];
 
-    /**
-     * Get the sender's index from the stored_trade_items.
-     */
-    let sender_index = stored_trade_items.findIndex((x) => x.sender === sender);
+    let receiver_index = stored_trade_items.findIndex(
+        (x) => x.receiver === receiver
+    );
 
-    /**
-     * Set the stored items.
-     */
     let stored_items = [];
 
-    /**
-     * If the sender already exists then update the stored_items.
-     */
-    if (sender_index !== -1) {
-        /**
-         * Get the stored items of the sender.
-         */
-        stored_items = stored_trade_items[sender_index].items;
+    if (receiver_index !== -1) {
+        stored_items = stored_trade_items[receiver_index].items;
     }
 
-    /**
-     * Loop the submitted items.
-     */
     items.forEach((item) => {
-        /**
-         * Find index of the item in the already stored items.
-         */
         let index = stored_items.findIndex((x) => x.id === item.id);
 
-        /**
-         * If the item is already stored then increase the quantity.
-         */
         if (index !== -1) {
             stored_items[index].quantity += item.quantity;
             return;
         }
 
-        /**
-         * If the item does not exist then push it to the stored_items array.
-         */
         stored_items.push(item);
     });
 
-    /**
-     * If the sender already exists then update the stored_items.
-     */
-    if (sender_index !== -1) {
-        /**
-         * Set the stored items of the sender.
-         */
-        stored_trade_items[sender_index].items = stored_items;
+    if (receiver_index !== -1) {
+        stored_trade_items[receiver_index].items = stored_items;
     } else {
-        /**
-         * Updated the sender's items in the stored_trade_items.
-         */
         stored_trade_items.push({
-            sender: sender,
+            receiver: receiver,
             items: stored_items,
         });
     }
@@ -162,124 +206,89 @@ function storeItems(sender, items) {
 }
 
 /**
- * Get the stored items of the sender.
- * 
- * @param {int|string} sender 
- * @returns array of items the sender sent.
+ * Get the stored items of the receiver.
+ *
+ * @param {int|string} receiver
+ * @returns array of items the receiver received.
  */
-function getStoredItems(sender){
-    /**
-     * Get the stored items.
-     */
+function getStoredItems(receiver, manually_called = true) {
     let stored_trade_items = localStorage.getItem("stored_trade_items");
 
-    if (stored_trade_items === null || stored_trade_items === undefined)
-            return console.log("%c📙 There are no items from this sender in storage.", 'background: #676900; color: #fff786');
-    
-    /**
-     * Parse the string of stored_trade_items.
-     */
+    if (stored_trade_items === null || stored_trade_items === undefined) {
+        if (manually_called)
+            logWarn("There are no items from this receiver in storage.");
+
+        return [];
+    }
+
     stored_trade_items = JSON.parse(stored_trade_items);
 
-    /**
-     * Get the sender's index from the stored_trade_items.
-     */
-    let sender_index = stored_trade_items.findIndex((x) => x.sender === sender);
+    let receiver_index = stored_trade_items.findIndex(
+        (x) => x.receiver === receiver
+    );
 
-    /**
-     * Return if exists.
-     */
-    if(sender_index !== -1)
-        return stored_trade_items[sender_index].items;
+    if (receiver_index !== -1) return stored_trade_items[receiver_index].items;
 
-    return console.log("%c📙 There are no items from this sender in storage.", 'background: #676900; color: #fff786');
+    if (manually_called)
+        logWarn("There are no items from this receiver in storage.");
+
+    return [];
 }
 
 /**
- * Compare the stored items of sender and then returned items to SMMO staff
+ * Compare the stored items of receiver and then returned items to SMMO staff
  * to see if it was enough or how much is still missing.
+ *
  * @param {array} required_items items that the person sent to themselves.
  * @param {array} returned_items items that were sent to SMMOStaff.
+ * @returns void
  */
 function compareStoredItems(required_items, returned_items) {
     let missing_items = [];
 
-    /**
-     * Loop the submitted items.
-     */
     returned_items.forEach((returned_item) => {
-        /**
-         * Find index of the item in the already stored items.
-         */
         let index = required_items.findIndex((x) => x.id === returned_item.id);
 
-        /**
-         *  If the returned item exists in the required_items array then subtract it.
-         */
         if (index !== -1) {
             required_items[index].quantity -= returned_item.quantity;
             return;
         }
 
-        /**
-         * If the item has not been returned then store it in missing items.
-         */
         missing_items.push(returned_item);
     });
 
-
-    /**
-     * Get the items that were send but were not required.
-     */
     let additional_items = returned_items.filter((returned_item) => {
         return returned_item.quantity > 0;
     });
 
-
-    
-    /**
-     * Get the items that are still required to be send.
-     */
     let not_enough_items = required_items.filter((required_item) => {
         return required_item.quantity > 0;
     });
 
-     /**
-     * Print missing items.
-     */
-    console.log("%c📕 Player has not returned:", 'background: #690007; color: #ff8686');
-    missing_items.forEach((missing_item) => {
-        console.log(missing_item.quantity + "x " + missing_item.name + " [id: " + missing_item.id + "]" );
+    logError("Player has not returned:");
+    missing_items.forEach((item) => {
+        logItem(item);
     });
 
-    /**
-     * Print items that were not sent in full quantity.
-     */
-    console.log("%c📙 Player has returned, but the quantity below is still missing:", 'background: #676900; color: #fff786');
-    not_enough_items.forEach((missing_item) => {
-        console.log(missing_item.quantity + "x " + missing_item.name + " [id: " + missing_item.id + "]" );
+    logWarn("Player has returned, but the quantity below is still missing:");
+    not_enough_items.forEach((item) => {
+        logItem(item);
     });
 
-    /**
-     * Print additional items.
-     */
-    console.log("%c📗 Player has added to the returned list:", 'background: #276900; color: #a2ff86');
-    additional_items.forEach((missing_item) => {
-        console.log(missing_item.quantity + "x " + missing_item.name + " [id: " + missing_item.id + "]" );
+    logSuccess("Player has added to the returned list:");
+    additional_items.forEach((item) => {
+        logItem(item);
     });
 }
 
-
 /**
- * Print text of items of sender.
- * @param {int|string} sender 
+ * Print text of items of receiver.
+ *
+ * @param {int|string} receiver
  */
-function printItems(sender) {
+function printItems(receiver) {
     let text = "";
-    let stored_items = getStoredItems(sender);
-
-    if(stored_items == null || stored_items == undefined)
-        return;
+    let stored_items = getStoredItems(receiver, false);
 
     stored_items.forEach((item) => {
         text += item.quantity + "x " + item.name + "(" + item.id + ")" + "\n";
