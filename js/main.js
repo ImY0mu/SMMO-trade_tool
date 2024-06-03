@@ -271,6 +271,9 @@ function compareStoredItems(required_items, returned_items) {
 function printItems(sender) {
     let stored_items = getStoredItems(sender);
 
+    if(stored_items == null || stored_items == undefined)
+        return;
+
     stored_items.forEach((item) => {
         text += item.quantity + "x " + item.name + "(" + item.id + ")" + "\n";
     });
