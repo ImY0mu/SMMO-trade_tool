@@ -253,6 +253,12 @@ function getStoredItems(receiver, manually_called = true) {
  * @returns void
  */
 function compareStoredItems(required_items, returned_items) {
+    if(!required_items.length)
+        return logWarn("Required items are empty.");
+
+    if(!returned_items.length)
+        return logWarn("Returned items are empty.");
+
     let missing_items = [];
 
     console.log(required_items, returned_items);
@@ -276,20 +282,35 @@ function compareStoredItems(required_items, returned_items) {
         return required_item.quantity > 0;
     });
 
-    logError("Player has not returned:");
-    missing_items.forEach((item) => {
-        logItem(item);
-    });
+    if(!missing_items.length){
+        logSuccess("Player has returned all items.");
+    }
+    else{
+        logError("Player has not returned:");
+        missing_items.forEach((item) => {
+            logItem(item);
+        });
+    }
 
-    logWarn("Player has returned, but the quantity below is still missing:");
-    not_enough_items.forEach((item) => {
-        logItem(item);
-    });
+    if(!not_enough_items.length){
+        logSuccess("There are no quantities missing.");
+    }
+    else{
+        logWarn("Player has returned, but the quantity below is still missing:");
+        not_enough_items.forEach((item) => {
+            logItem(item);
+        });
+    }
 
-    logSuccess("Player has added to the returned list:");
-    additional_items.forEach((item) => {
-        logItem(item);
-    });
+    if(!additional_items.length){
+        logWarn("Player has not included any additional items.");
+    }
+    else{
+        logSuccess("Player has added to the returned list:");
+        additional_items.forEach((item) => {
+            logItem(item);
+        });
+    }
 }
 
 /**
