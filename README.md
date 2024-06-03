@@ -2,6 +2,7 @@
 Tool to compare alt traded and returned items to make live of moderators easier.
 
 Version: 0.0.1
+
 Developed by Y0mu#0703
 
 ### Features:
@@ -20,25 +21,26 @@ Developed by Y0mu#0703
 5. Find the unzipped extension folder and load it.
 
 ### Usage:
-If player with account A (993614) sent items from alt account B (1178418), then we would work like this:
+If player with account A (user_id 10000) sent items from alt account B (user_id 20000), then we would work like this:
+
 **Before every alt trade, enter `resetItems();` into the console!**
 
 How to get alt traded items:
 - Open trade page of account A
 - Find the first trade between the main (account A) and alt (account B)
 - Open Console (CTRL+SHIFT+J/I)
-- Enter `getItems(1178418, 993614);` into the console (1178418 - because the sender is the alt account B, 993614 - because the receiver is the main account A)
+- Enter `getItems(20000, 10000);` into the console (20000 - because the sender is the alt account B, 10000 - because the receiver is the main account A)
 - Repeat the step above until you get all the traded items
 
 How to get items traded sent to SMMOStaff:
 - Find the first trade between the main (account A) and SMMOStaff (account C)
 - Open Console (CTRL+SHIFT+J/I)
-- Enter `getItems(993614, 575719);` into the console (993614 - because the sender is the main account A, 575719 - because the receiver is the SMMOStaff account C)
+- Enter `getItems(10000, 575719);` into the console (10000 - because the sender is the main account A, 575719 - because the receiver is the SMMOStaff account C)
 - Repeat the step above until you get all the traded items
 
 How to compare the items and see what is still left or if there were more items sent to SMMOStaff:
 - Open Console (CTRL+SHIFT+J/I)
-- Enter `compareStoredItems(getStoredItems(1178418), getStoredItems(993614));` into the console (1178418 - because the first items are stored from the trades of alt account B, 993614 - because the second items are stored from the trades of main account A)
+- Enter `compareStoredItems(getStoredItems(20000), getStoredItems(10000));` into the console (20000 - because the first items are stored from the trades of alt account B, 993614 - because the second items are stored from the trades of main account A)
 - See and review the printed results to determine whether it is enough or no.
 
 ### Functions:
