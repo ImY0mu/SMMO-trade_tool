@@ -132,7 +132,7 @@ function getItems(receiver = null, senders = null, failed_check_only = true) {
     for (let i = 1; i < rows.length; i++) {
         if (
             !isReceiverInTrade(receiver, rows[i].children[1].innerHTML) &&
-            areSendersInTrade(senders, rows[i].children[2].innerHTML)
+            !areSendersInTrade(senders, rows[i].children[2].innerHTML)
         )
             continue;
 
