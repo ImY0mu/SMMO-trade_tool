@@ -67,6 +67,7 @@ function getItems(sender, receiver = null) {
     if (!items.length) 
         return console.log("%c📙 This page has no traded between the sender and receiver", 'background: #676900; color: #fff786');
 
+    console.log("%c📗 All trades (" + items.length + ") from this page has been stored", 'background: #276900; color: #a2ff86');
     storeItems(sender, items);
 }
 
@@ -114,7 +115,6 @@ function storeItems(sender, items) {
      * Loop the submitted items.
      */
     items.forEach((item) => {
-        console.log(item);
         /**
          * Find index of the item in the already stored items.
          */
