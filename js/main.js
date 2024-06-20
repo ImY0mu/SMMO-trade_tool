@@ -261,17 +261,20 @@ function compareStoredItems(required_items, returned_items) {
 
     let missing_items = [];
 
-    console.log(required_items, returned_items);
 
-    returned_items.forEach((returned_item) => {
-        let index = required_items.findIndex((x) => x.id === returned_item.id);
+    required_items.forEach((required_item) => {
+        let index = returned_items.findIndex((x) => x.id === required_item.id);
 
+        
         if (index !== -1) {
-            required_items[index].quantity -= returned_item.quantity;
+            returned_items[index].original_quantity = returned_items[index].quantity;
+            returned_items[index].quantity -= required_item.quantity;
             return;
         }
 
-        missing_items.push(returned_item);
+        required_item.original_quantity = required_item.quantity;
+
+        missing_items.push(required_item);
     });
 
     let additional_items = returned_items.filter((returned_item) => {
@@ -279,7 +282,7 @@ function compareStoredItems(required_items, returned_items) {
     });
 
     let not_enough_items = required_items.filter((required_item) => {
-        return required_item.quantity > 0;
+        return required_item.quantity > 0 && required_item.quantity !== required_item.original_quantity;
     });
 
     if(!missing_items.length){
