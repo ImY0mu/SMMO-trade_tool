@@ -117,7 +117,7 @@ function logError(message) {
  */
 function logItem(item) {
     console.log(item.quantity + "x " + item.name + " [id: " + item.id + "]");
-}
+}   
 
 /**
  * Get items from the current trade page.
@@ -263,16 +263,23 @@ function compareStoredItems(required_items, returned_items) {
 
 
     required_items.forEach((required_item) => {
+        // Check if the required item exists in the returned items.
         let index = returned_items.findIndex((x) => x.id === required_item.id);
 
+        required_item.original_quantity = required_item.quantity;
+        required_item.returned_quantity = 0;
         
+        // If it exists, then proceed with the subtracting the quantity
         if (index !== -1) {
-            returned_items[index].original_quantity = returned_items[index].quantity;
-            returned_items[index].quantity -= required_item.quantity;
+            returned_items[index].original_quantity = required_item.original_quantity;
+            returned_items[index].returned_quantity = returned_items[index].quantity;
+            required_item.returned_quantity = returned_items[index].quantity;
+
+            required_item.quantity -= returned_items[index].quantity;
+            returned_items[index].quantity = required_item.quantity;
+
             return;
         }
-
-        required_item.original_quantity = required_item.quantity;
 
         missing_items.push(required_item);
     });
